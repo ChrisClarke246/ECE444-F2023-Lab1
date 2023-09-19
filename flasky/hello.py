@@ -64,9 +64,16 @@ def index():
             flash('Looks like you have changed your name!')
         if old_email is not None and old_email != form.email.data:
             flash('Looks like you have changed your email!')
-            
+
         # set session variables
         session['name'] = form.name.data
         session['email'] = form.email.data
+
+        # handle non uoft email adress
+        if 'utoronto' not in session.get('email'):
+            session['email'] = None
+            session['non_uoft'] = True
+        else:
+            session['non_uoft'] = False
         return redirect(url_for('index'))
-    return render_template('index.html', form=form, name=session.get('name'), email=session.get('email'))
+    return render_template('index.html', form=form, name=session.get('name'), email=session.get('email'), non_uoft=session.get('non_uoft'))
